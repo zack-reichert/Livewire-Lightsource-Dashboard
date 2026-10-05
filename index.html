@@ -229,7 +229,7 @@
     <div class="kpi">
       <div class="kpi-label">Closed Won YTD</div>
       <div class="kpi-value green" id="kpi-cw">$346,531</div>
-      <div class="kpi-sub" id="kpi-cw-sub"><span class="pill pill-green">↑ 146% YoY</span>&nbsp; vs. $137K in 2025 H1</div>
+      <div class="kpi-sub" id="kpi-cw-sub"><span class="pill pill-green">↑ 146% YoY</span>&nbsp; vs. $137K in 2025</div>
     </div>
     <div class="kpi">
       <div class="kpi-label">Annualized Pace</div>
@@ -255,7 +255,7 @@
       <div class="card-head">
         <div>
           <div class="card-title">Closed Won — Year Over Year</div>
-          <div class="card-subtitle">Cumulative · 2025 full year vs. 2026 through June</div>
+          <div class="card-subtitle" id="yoy-subtitle">Cumulative · 2025 full year vs. 2026 through June</div>
         </div>
         <div class="legend">
           <div class="legend-item">
@@ -276,7 +276,7 @@
       <div class="card-head">
         <div>
           <div class="card-title">Pipeline — Monthly</div>
-          <div class="card-subtitle">2026 · January – July</div>
+          <div class="card-subtitle" id="pl-subtitle">2026 · January – July</div>
         </div>
         <div class="legend">
           <div class="legend-item">
@@ -326,7 +326,7 @@
       <div class="card-head">
         <div>
           <div class="card-title">Lutron Sales — Monthly</div>
-          <div class="card-subtitle">2026 · January – June</div>
+          <div class="card-subtitle" id="lut-subtitle">2026 · January – June</div>
         </div>
         <div class="legend">
           <div class="legend-item">
@@ -377,15 +377,15 @@
   // dashboard paints instantly, then overwritten by fetchLiveData().
   // ============================================================
   const CONFIG = {
-    week: 25,
-    pipeline: [174960, 212100, 265760, 328080, 291840, 259689, 256186, null, null, null, null, null],
+    week: 40,
+    pipeline: [174960, 212100, 265760, 328080, 291840, 259689, 296186, 307897, 367761, null, null, null],
     closedWon2025: [38366, 18087, 6278, 10069, 16465, 48096, 90376, 43107, 9572, 11633, 29250, 21197],
-    closedWon2026: [61042, 27757, 109089, 32477, 81846, 25567, null, null, null, null, null, null],
-    lutron: [2941.40, 1172.28, 22808.27, 29143.21, 14383.46, 2648.51, null, null, null, null, null, null],
-    ketraGoal: 60,
-    ketraActual: 38,
-    runRateYTD: 720784,
-    closedWonYTD: 346531,
+    closedWon2026: [61042, 27757, 109089, 32477, 81846, 25567, 29187, 2808, 9819, null, null, null],
+    lutron: [2941.40, 1172.28, 22808.27, 29143.21, 14383.46, 2648.51, 2002.48, 1121.38, 5585.18, null, null, null],
+    ketraGoal: 92,
+    ketraActual: 51,
+    runRateYTD: 530140,
+    closedWonYTD: 407800,
   };
 
   let yoyChart, plChart, lutChart;
@@ -428,7 +428,7 @@
 
     document.getElementById('kpi-cw').textContent = fmtDollar(CONFIG.closedWonYTD);
     document.getElementById('kpi-cw-sub').innerHTML = yoyPct==null ? '' :
-      `<span class="pill pill-green">↑ ${yoyPct}% YoY</span>&nbsp; vs. ${fmtK(cw2025SamePoint)} in 2025 H1`;
+      `<span class="pill pill-green">↑ ${yoyPct}% YoY</span>&nbsp; vs. ${fmtK(cw2025SamePoint)} in 2025`;
 
     document.getElementById('kpi-pace').textContent = '$' + (annualizedPace/1e6).toFixed(2) + 'M';
 
@@ -463,6 +463,11 @@
       document.getElementById('lutron-callout').innerHTML =
         `<strong>${fmtDollar(lutronYTD)} YTD</strong> — strongest months ${months[lutronTop2[0].i]} (${fmtK(lutronTop2[0].v)}) and ${months[lutronTop2[1].i]} (${fmtK(lutronTop2[1].v)})`;
     }
+
+    const rangeLabel = n => n <= 1 ? `2026 · ${months[0]}` : `2026 · ${months[0]} – ${months[n-1]}`;
+    document.getElementById('yoy-subtitle').textContent = `Cumulative · 2025 full year vs. 2026 through ${months[monthsSoFar-1]}`;
+    document.getElementById('pl-subtitle').textContent = rangeLabel(countFilled(CONFIG.pipeline));
+    document.getElementById('lut-subtitle').textContent = rangeLabel(countFilled(CONFIG.lutron));
 
     renderCharts(c2026Cum, c2025Cum);
   }
